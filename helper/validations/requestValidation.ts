@@ -2,7 +2,7 @@ const { check } = require("express-validator");
 const { validationErrorHandler } = require("../global");
 
 export const requestGetValidate = [validationErrorHandler];
-export const LikeValidate = [
+export const requestIdValidation = [
   check("requestId")
     .not()
     .isEmpty()

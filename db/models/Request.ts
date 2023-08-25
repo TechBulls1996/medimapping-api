@@ -1,9 +1,17 @@
+import { ObjectId } from "mongodb";
 import mongoose from "mongoose";
 
 var requestSchema = new mongoose.Schema(
   {
-    userId: {
+    status: {
       type: String,
+      default: "pending",
+    },
+    response: {
+      type: Array,
+    },
+    userId: {
+      type: ObjectId,
       required: true,
     },
     bloodType: {
@@ -41,6 +49,10 @@ var requestSchema = new mongoose.Schema(
     city: {
       type: Object,
       required: true,
+      default: {
+        value: "",
+        Label: "",
+      },
     },
 
     pinCode: {

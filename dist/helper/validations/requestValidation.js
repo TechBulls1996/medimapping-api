@@ -1,10 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.requestValidate = exports.LikeValidate = exports.requestGetValidate = void 0;
+exports.requestValidate = exports.requestIdValidation = exports.requestGetValidate = void 0;
 const { check } = require("express-validator");
 const { validationErrorHandler } = require("../global");
 exports.requestGetValidate = [validationErrorHandler];
-exports.LikeValidate = [
+exports.requestIdValidation = [
     check("requestId")
         .not()
         .isEmpty()

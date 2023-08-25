@@ -3,10 +3,18 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const mongodb_1 = require("mongodb");
 const mongoose_1 = __importDefault(require("mongoose"));
 var requestSchema = new mongoose_1.default.Schema({
-    userId: {
+    status: {
         type: String,
+        default: "pending",
+    },
+    response: {
+        type: Array,
+    },
+    userId: {
+        type: mongodb_1.ObjectId,
         required: true,
     },
     bloodType: {
@@ -44,6 +52,10 @@ var requestSchema = new mongoose_1.default.Schema({
     city: {
         type: Object,
         required: true,
+        default: {
+            value: "",
+            Label: "",
+        },
     },
     pinCode: {
         type: String,
