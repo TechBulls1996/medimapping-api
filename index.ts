@@ -1,5 +1,6 @@
 import express from "express";
 import dotenv from "dotenv";
+import cors from "cors"; 
 
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
@@ -23,6 +24,7 @@ try {
   database.on("error", (error: any) => {
     console.log(error);
   });
+
 } catch (error) {
   console.log(error);
 }
@@ -31,6 +33,15 @@ try {
 app.use(bodyParser.urlencoded({ extended: false }));
 // parse application/json
 app.use(bodyParser.json());
+
+// Enable CORS for all routes
+const allowedOrigins = 'http://medimapping.com';  
+const corsOpts = {
+    origin: allowedOrigins,
+    credentials: true,
+    methods: ['GET','POST','HEAD','PUT','PATCH','DELETE'],
+};
+app.use(cors(corsOpts));
 
 // routes
 app.use("/", routes);
