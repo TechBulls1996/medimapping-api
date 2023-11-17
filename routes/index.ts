@@ -15,9 +15,22 @@ router.use((req: any, res: any, next: () => void) => {
   next();
 });
 
+
 // define the home page route
 router.get("/", (req: any, res: any) => {
   res.json("Medimapping Api index page.");
+});
+
+// Enable CORS for all routes
+router.use((req, res, next) => {
+  const allowedOrigins = ['http://medimapping.com', 'http://www.medimapping.com'];
+  const origin = req.headers.origin as string;
+  if (allowedOrigins.includes(origin)) {
+    res.header('Access-Control-Allow-Origin', origin);
+  }
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+  res.header('Access-Control-Allow-Headers', 'Content-Type');
+  next();
 });
 
 //auth routes
