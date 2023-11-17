@@ -1,4 +1,5 @@
 import express from "express";
+import cors from "cors"; 
 
 const router = express.Router();
 const { getDate } = require("../helper/global");
@@ -22,16 +23,15 @@ router.get("/", (req: any, res: any) => {
 });
 
 // Enable CORS for all routes
-router.use((req, res, next) => {
-  const allowedOrigins = ['http://medimapping.com', 'http://www.medimapping.com'];
-  const origin = req.headers.origin as string;
-  if (allowedOrigins.includes(origin)) {
-    res.header('Access-Control-Allow-Origin', origin);
-  }
-  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-  res.header('Access-Control-Allow-Headers', 'Content-Type');
-  next();
-});
+const allowedOrigins = ['http://medimapping.com', 'http://www.medimapping.com'];  
+const corsOpts = {
+    origin: allowedOrigins,
+    credentials: true,
+    methods: ['GET','POST','HEAD','PUT','PATCH','DELETE'],
+    allowedHeaders: ['Content-Type'],
+    exposedHeaders: ['Content-Type']
+};
+router.use(cors(corsOpts));
 
 //auth routes
 router.use("/auth", authRoutes);
