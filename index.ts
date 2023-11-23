@@ -35,11 +35,15 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 // Enable CORS for all routes
-const allowedOrigins = 'http://medimapping.com';  
+const allowedOrigins = '*'; 
 const corsOpts = {
-    origin: allowedOrigins,
-    credentials: true,
+    origin: `${allowedOrigins}`, 
+     credentials: true,
     methods: ['GET','POST','HEAD','PUT','PATCH','DELETE'],
+    allowedHeaders: [
+      'Content-Type',
+      'Authorization',
+    ],
 };
 app.use(cors(corsOpts));
 
