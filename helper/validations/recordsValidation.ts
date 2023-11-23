@@ -33,7 +33,5 @@ export const recordValidate = [
     .isLength({ min: 30, max: 500 })
     .withMessage("Minimum Length should be 30 and Maximum 500."),
 
-  check("medications").isLength({ min: 30, max: 500 }).withMessage("Minimum Length should be 30 and Maximum 500."),
-
   validationErrorHandler,
 ];
