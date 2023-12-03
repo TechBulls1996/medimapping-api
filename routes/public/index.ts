@@ -102,9 +102,16 @@ publicRouter.get("/donars", async (req: any, res: any) => {
           as: "user",
         },
       },
+      { $unwind: "$user" },
+      {
+        $group: {
+          _id: "$userId",
+          latestActivity: { $last: "$$ROOT" }, // Keep the latest activity for each user
+        },
+      },
+      { $replaceRoot: { newRoot: "$latestActivity" } }, // Replace the root with the latest activity
       { $limit: pageSize },
       { $sort: sort },
-      { $unwind: "$user" },
       {
         $project: {
           _id: 1,
@@ -116,7 +123,6 @@ publicRouter.get("/donars", async (req: any, res: any) => {
             state: 1,
           },
           type: 1,
-          createdAt:1
         },
       },
     ]);

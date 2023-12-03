@@ -239,7 +239,6 @@ requestRouter.get("/recent/donars", async (req: any, res: any) => {
 
   const pageSize: any = req.query.pageSize ? parseInt(req.query.pageSize) : 10;
   const sort = { CreatedAt: -1 };
-
   const request = await Activity.aggregate([
     {
       $lookup: {
@@ -249,9 +248,16 @@ requestRouter.get("/recent/donars", async (req: any, res: any) => {
         as: "user",
       },
     },
+    { $unwind: "$user" },
+    {
+      $group: {
+        _id: "$userId",
+        latestActivity: { $last: "$$ROOT" }, 
+      },
+    },
+    { $replaceRoot: { newRoot: "$latestActivity" } },
     { $limit: pageSize },
     { $sort: sort },
-    { $unwind: "$user" },
     {
       $project: {
         _id: 1,
@@ -266,6 +272,7 @@ requestRouter.get("/recent/donars", async (req: any, res: any) => {
       },
     },
   ]);
+  
 
   if (request) {
     return res.json({
@@ -297,6 +304,13 @@ requestRouter.get("/recent/recievers", async (req: any, res: any) => {
     { $limit: pageSize },
     { $sort: sort },
     { $unwind: "$user" },
+    {
+      $group: {
+        _id: "$userId",
+        latestActivity: { $last: "$$ROOT" }, 
+      },
+    },
+    { $replaceRoot: { newRoot: "$latestActivity" } },
     {
       $project: {
         _id: 1,

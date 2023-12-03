@@ -3,6 +3,7 @@ import { FailedMsg, SuccessMsg } from "../helper/messages";
 import { ApiFailedResponse, getRequestAuth } from "../helper/global";
 import { recordIdValidation, recordValidate } from "../helper/validations/recordsValidation";
 import { ObjectId } from "mongodb";
+import mongoose from "mongoose";
 
 const recordsRouter = express.Router();
 const Record = require("../db/models/Record");
@@ -61,5 +62,21 @@ recordsRouter.get("/", async (req: any, res: any) => {
   return res.status(401).json(ApiFailedResponse(FailedMsg));
 });
 
+recordsRouter.get("/:requestId", async (req: any, res: any) => {
+  const requestId = req.params.requestId;
+  if (!mongoose.Types.ObjectId.isValid(requestId)) {
+    return res.status(400).json(ApiFailedResponse("Invalid ObjectId"));
+  }
+  const record = await Record.findById(requestId);
 
+  if (record) {
+    return res.json({
+      status: true,
+      message: SuccessMsg,
+      data: record,
+    });
+  }
+
+  return res.status(404).json(ApiFailedResponse("Record not found"));
+});
 module.exports = recordsRouter;
