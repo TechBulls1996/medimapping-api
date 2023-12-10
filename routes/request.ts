@@ -269,6 +269,7 @@ requestRouter.get("/recent/donars", async (req: any, res: any) => {
           state: 1,
         },
         type: 1,
+        createdAt:1,
       },
     },
   ]);
@@ -326,9 +327,56 @@ requestRouter.get("/recent/recievers", async (req: any, res: any) => {
           state: 1,
         },
         type: 1,
+        createdAt:1,
       },
     },
   ]);
+
+  if (request) {
+    return res.json({
+      status: true,
+      message: SuccessMsg,
+      data: request,
+    });
+  }
+
+  return res.status(401).json(ApiFailedResponse(FailedMsg));
+});
+
+requestRouter.get("/history", async (req: any, res: any) => {
+  const authData = getRequestAuth(req);
+  let page: any = req.query.page ? parseInt(req.query.page) : 1;
+  if (page === 0) page = 1;
+
+  const pageSize: any = req.query.pageSize ? parseInt(req.query.pageSize) : 10;
+  const sort = { CreatedAt: -1 };
+  
+  const request = await Request.find({
+    $or: [
+      { "userId": authData.userId },
+      { "response.userId": authData.userId },
+    ],
+  })
+  .sort(sort)
+  .skip((page - 1) * pageSize)
+  .limit(pageSize)
+  .select({
+    userId:1,
+    status: 1,
+    bloodType: 1,
+    bloodGroup: 1,
+    bloodUnit: 1,
+    time: 1,
+    hospital: 1,
+    hospitalAddress: 1,
+    country: 1,
+    state: 1,
+    city: 1,
+    patientName: 1,
+    desc: 1,
+    createdAt: 1,
+  });
+  
 
   if (request) {
     return res.json({

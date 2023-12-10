@@ -1,8 +1,10 @@
 import express from "express";
 import { ApiFailedResponse, getRequestAuth } from "../../helper/global";
 import { FailedMsg, SuccessMsg } from "../../helper/messages";
+import mongoose from "mongoose";
 const userRouter = express.Router();
 const Activity = require("../../db/models/Activity");
+const User = require("../../db/models/User");
 
 userRouter.get("/", (req: any, res: any) => {
   res.json("User Page.");
@@ -48,6 +50,7 @@ userRouter.get("/network", async (req: any, res: any) => {
           state: 1,
         },
         type: 1,
+        createdAt:1,
       },
     },
   ]);
@@ -62,6 +65,30 @@ userRouter.get("/network", async (req: any, res: any) => {
   return res.status(401).json(ApiFailedResponse(FailedMsg));
 });
 
+userRouter.get("/:userId", async (req: any, res: any) => {
+  const userId = req.params.userId;
+  if (!mongoose.Types.ObjectId.isValid(userId)) {
+    return res.status(400).json(ApiFailedResponse("Invalid ObjectId"));
+  }
+  const user = await User.findById(userId).select({
+    name:1,
+    city:1,
+    state:1,
+    country:1,
+    pinCode:1,
+    createdAt:1,
+    updatedAt:1,
+  });
+  if (user) {
+    return res.json({
+      status: true,
+      message: SuccessMsg,
+      data: user,
+    });
+  }
+
+  return res.status(404).json(ApiFailedResponse("User not found"));
+});
 
 
 module.exports = userRouter;

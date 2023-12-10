@@ -75,6 +75,7 @@ export const loginUser = async (email: string, password: string) => {
         status: true,
         authToken: jwtToken,
         user: {
+          id: user.id,
           name: user.name,
           email: user.email,
           mobile: user.mobile,
